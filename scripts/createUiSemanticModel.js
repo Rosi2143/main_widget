@@ -12,7 +12,7 @@ var MetadataKey = Java.type("org.openhab.core.items.MetadataKey");
 var Metadata = Java.type("org.openhab.core.items.Metadata");
 
 var itemsAdded = []
-var prepositionFor = ["Küche", "Werkstatt", "Waschküche", "Bibliothek", "Garage", "Haustür"]
+var prepositionFor = ["Küche", "Werkstatt", "Waschküche", "Bibliothek", "Garage", "Haustür", "Kammer"]
 var uiSemanticsKeys = { "equipment": "", "epuipmentItem": "", "location": "", "preposition": "", "icon": "", "warn": -30, "fail": -45 }
 
 function getMetadata(itemName, namespace) {
@@ -20,7 +20,7 @@ function getMetadata(itemName, namespace) {
 }
 
 var getValue = function (item, semantic, relation) {
-    logger.info("getValue: " + item + " - " + semantic + " - " + " with " + relation)
+    logger.info("getValue[in]: " + item + " - " + semantic + " - " + " with " + relation)
 
     var semantics = getMetadata(item, semantic);
     logger.debug(semantic + ":" + semantics)
@@ -30,14 +30,14 @@ var getValue = function (item, semantic, relation) {
         if ((hasRelation !== undefined) && (hasRelation !== null)) {
             var relationItem = ir.getItem(hasRelation)
             logger.debug(relationItem)
-            logger.debug("getValue: " + item + " -> " + relation + " -> " + relationItem.getName())
+            logger.debug("getValue[out]: " + item + " -> " + relation + " -> " + relationItem.getName())
         }
         else {
-            logger.info("No relation found in Model!")
+            logger.info("getValue[out]: No relation found in Model!")
         }
     }
     else {
-        logger.info("No semantic found in Model!")
+        logger.info("getValue[out]: No semantic found in Model!")
     }
 
     return hasRelation === undefined ? null : relationItem.getName()
@@ -57,10 +57,13 @@ var enrichMetadata = function (item, icon) {
         logger.debug("EquipmentItem " + equipmentItem.name + " hasLocation: " + hasLocation);
 
         if (hasLocation === null) {
-            var metaEquipment = 1
-            while ((metaEquipment !== null) && (hasLocation !== null)) {
+            var metaEquipment = "none"
+            var safetyCounter = 0
+            hasLocation = "none"
+            while ((metaEquipment !== null) && (hasLocation !== null) && (safetyCounter < 5)) {
                 metaEquipment = getValue(equipmentItem.name, "semantics", "isPartOf");
-                logger.debug("Equipment " + equipmentItem.name + " is part of: " + metaEquipment);
+                logger.debug(safetyCounter + ": Equipment " + equipmentItem.name + " is part of: " + metaEquipment);
+                safetyCounter = safetyCounter + 1
 
                 if (metaEquipment !== null) {
                     var metaEquipmentItem = metaEquipment === undefined ? ir.getItem(equipmentItem) : ir.getItem(metaEquipment);
