@@ -13,7 +13,7 @@ var Metadata = Java.type("org.openhab.core.items.Metadata");
 
 var itemsAdded = []
 var prepositionFor = ["Küche", "Werkstatt", "Waschküche", "Bibliothek", "Garage", "Haustür", "Kammer"]
-var uiSemanticsKeys = { "equipment": "", "epuipmentItem": "", "location": "", "preposition": "", "icon": "", "warn": -30, "fail": -45 }
+var uiSemanticsKeys = { "equipment": "", "equipmentItem": "", "location": "", "preposition": "", "icon": "", "warn": -30, "fail": -45 }
 
 function getMetadata(itemName, namespace) {
     return MetadataRegistry.get(new MetadataKey(namespace, itemName));
@@ -80,7 +80,7 @@ var enrichMetadata = function (item, icon) {
             var locationItem = hasLocation === undefined ? ir.getItem(equipmentItem.name) : ir.getItem(hasLocation);
 
             uiSemanticsKeys.equipment = equipmentItem.label;
-            uiSemanticsKeys.epuipmentItem = equipmentItem.name;
+            uiSemanticsKeys.equipmentItem = equipmentItem.name;
             uiSemanticsKeys.location = locationItem.label;
             uiSemanticsKeys.preposition = (prepositionFor.indexOf(uiSemanticsKeys.location) > -1) ? " in der " : " im ";
             uiSemanticsKeys.icon = icon;
@@ -94,7 +94,7 @@ var enrichMetadata = function (item, icon) {
             }
             uiSemanticsKeys.fail = uiSemanticsKeys.warn * 1.5;
 
-            if (getValue(item, UI_NAMESPACE, "epuipmentItem") !== null) {
+            if (getValue(item, UI_NAMESPACE, "equipmentItem") !== null) {
                 logger.info("Item: " + item + " UPDATE Metadata in " + UI_NAMESPACE + ": " + uiSemanticsKeys.equipment + uiSemanticsKeys.preposition + uiSemanticsKeys.location);
                 itemsAdded.push(item)
                 MetadataRegistry.update(new Metadata(new MetadataKey(UI_NAMESPACE, item), null, uiSemanticsKeys));
