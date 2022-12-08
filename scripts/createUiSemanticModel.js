@@ -150,3 +150,5 @@ for each(var item in MetadataRegistry.getAll()) {
         }
     }
 }
+
+logger.info("Done: Collecting semantics for 'main_widget'...")
