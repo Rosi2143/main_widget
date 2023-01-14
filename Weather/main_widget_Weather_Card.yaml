@@ -444,6 +444,7 @@ slots:
                     action: variable
                     actionVariable: tab
                     actionVariableValue: hourly_forecast
+                    visible: "=items[((!props.itemPrefix) ? '' : props.itemPrefix) + 'Current_Temperature'].state !== '-'"
                 - component: oh-button
                   config:
                     text: "=(!props.wordingForecastDays) ? 'Daily' : props.wordingForecastDays"
@@ -452,6 +453,7 @@ slots:
                     action: variable
                     actionVariable: tab
                     actionVariableValue: daily_forecast
+                    visible: "=items[((!props.itemPrefix) ? '' : props.itemPrefix) + 'Forecast_Today'].state !== '-'"
                 - component: oh-button
                   config:
                     text: "=(!props.wordingForecastPrecip) ? '%-Precipitation' : props.wordingForecastPrecip"
@@ -460,6 +462,7 @@ slots:
                     action: variable
                     actionVariable: tab
                     actionVariableValue: precip_forecast
+                    visible: "=items[((!props.itemPrefix) ? '' : props.itemPrefix) + 'Current_PrecipitationAmount'].state !== '-'"
           - component: f7-block
             config:
               class:
